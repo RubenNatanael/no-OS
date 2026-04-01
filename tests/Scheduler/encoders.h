@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "capi.pb.h"
-#include "/home/ruben/ADI/core-sw-common-hal/api/capi_i2c.h"
+#include "capi_i2c.h"
 
 #ifdef __cplusplus
 extern "C" {

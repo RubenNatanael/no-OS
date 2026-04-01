@@ -125,8 +125,3 @@ message RPC {
     I2CDeinitParams deinit_param = 4;
   }
 }
-
-message ItemSchedule {
-    uint32 t = 1;
-    bytes cmd = 2 [(nanopb).max_size = 64];
-}
