@@ -12,100 +12,64 @@ This test example demonstrates a complete RPC implementation using:
 - Protocol Buffer encoding using nanopb (lightweight protobuf implementation)
 - Automated RPC stub generation
 - Modular platform driver architecture
-- Support for multiple compilation targets (native Linux, ARM32)
 - Extensible transport layer implementation
 
 ## Prerequisites
 
-- GCC compiler (native or cross-compiler for ARM32)
-- Make build system
-- nanopb library
-- CAPI framework
-- Python (for RPC generator script)
+- GCC compiler
+- CMake (>= 3.14)
+- Python 3 with `protobuf` and `grpcio-tools` packages
+- CAPI framework (core-sw-common-hal)
 
-## Configuration
+Install Python dependencies:
+```bash
+pip install protobuf grpcio-tools
+```
 
-### Platform Selection
+## Building
 
-To switch between different platform implementations, you need to modify three locations:
-
-1. **Makefile** - Update the `PLATFORM_DRIVER_SRC` variable:
-
-    This example has 2 platform driver implementation(dummy and linux i2c).
-   ```makefile
-    PLATFORM_DRIVER_SRC = platform/nanopb/capi_i2c_dummy_driver.c
-    or
-    PLATFORM_DRIVER_SRC =platform/linux/capi_i2c_linux_driver.c
-    or 
-    PLATFORM_DRIVER_SRC =path/to/any/platform/implementation
-   ```
-
-2. **server.c** - Update the include directive:
-
-    Ex:
-   ```c
-   #include "platform/nanopb/capi_i2c_dummy_driver.h"
-   ```
-
-3. **server.c** - Update the `used_i2c_ops` variable:
-
-    Ex:
-   ```c
-   struct i2c_ops used_i2c_ops = &dummy_i2c_ops;
-   ```
-
-### Path Configuration
-
-**Important:** Before building, ensure the following paths are correctly configured in the Makefile:
-
-1. **nanopb.mk path**:
-   ```makefile
-   include ../../extra/nanopb.mk  # Modify to point to actual nanopb.mk location on your device
-   ```
-
-2. **CAPI directory**:
-   ```makefile
-   CAPI_DIR = /path/to/your/capi  # Set to your CAPI installation directory
-   ```
-
-## Building the Project
-
-### Option 1: Using Make (Native Build)
+### Configure and Build
 
 ```bash
-make clean
+mkdir build && cd build
+cmake ..
 make
 ```
 
-### Option 2: ARM32 Cross-Compilation
+### Platform Selection
 
-Use the provided build utility script:
+The server can use different I2C platform drivers. Select via CMake option:
 
 ```bash
-./build-arm32.sh
+# Linux I2C driver (default)
+cmake .. -DSERVER_PLATFORM=linux
+
+# Dummy driver (for testing without hardware)
+cmake .. -DSERVER_PLATFORM=dummy
 ```
 
-Ensure the script has execute permissions:
+### Custom CAPI Path
+
+If core-sw-common-hal is not at the default location:
+
 ```bash
-chmod +x build-arm32.sh
+cmake .. -DCAPI_DIR=/path/to/core-sw-common-hal
 ```
 
 ## RPC Code Generation
 
-To regenerate the RPC logic after modifying protocol definitions:
+RPC stubs are automatically generated during the CMake build. To manually regenerate:
 
 ```bash
-python nanopb_rpc_generator.py [your_proto_file.proto]
+python utils/nanopb_rpc_generator.py capi.proto --output build/capi_rpc
 ```
-
-This will generate the necessary RPC stubs and handlers based on your protocol buffer definitions.
 
 ## Transport Layer
 
 The TCP transport layer implementation is designed to be extensible. To implement a different transport protocol:
 
-1. Implement the transport interface functions defined in the transport header
-2. Update the server configuration to use your transport implementation
+1. Implement the transport interface functions defined in `transport/transport.h`
+2. Update the server/client to use your transport implementation
 3. Rebuild the project
 
 ## Usage
@@ -114,9 +78,31 @@ After successful compilation:
 
 1. Start the server:
    ```bash
-   ./server
+   ./build/server
    ```
-2. Start the client
-    ```bash
-   ./client
+
+2. Start the client:
+   ```bash
+   ./build/client
    ```
+
+## Project Structure
+
+```
+tests/i2c/nanopb/
+├── CMakeLists.txt          # Build configuration
+├── capi.proto              # Protocol buffer definitions
+├── capi.options            # nanopb options
+├── server.c                # Server application
+├── main_client.c           # Client application
+├── transport/              # Transport layer implementation
+│   ├── transport.c
+│   └── transport.h
+└── utils/
+    └── nanopb_rpc_generator.py  # RPC stub generator
+```
+
+Platform drivers are located in:
+- `drivers/platform/linux/capi/` - Linux I2C driver
+- `drivers/platform/nanopb/` - Dummy driver for testing
+- `include/capi/` - Common headers

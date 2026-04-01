@@ -31,7 +31,7 @@ static int nanopb_i2c_register_callback(struct capi_i2c_controller_handle *handl
                              capi_i2c_callback const callback, void *const callback_arg);
 
 /* nanopb ops structure */
-struct capi_i2c_ops nanopb_i2c_ops = {
+struct capi_i2c_ops i2c_ops = {
     .init = nanopb_i2c_init,
     .deinit = nanopb_i2c_deinit,
     .transmit = nanopb_i2c_transmit,
@@ -159,7 +159,7 @@ static int nanopb_i2c_init(struct capi_i2c_controller_handle **handle,
     }
 
     /* Populate local handle with response data */
-    (*handle)->ops = &nanopb_i2c_ops;
+    (*handle)->ops = &i2c_ops;
     (*handle)->init_allocated = response.params.handle.init_allocated;
     (*handle)->lock = (void *)response.params.handle.lock;
     (*handle)->priv = (void *)response.params.handle.priv;

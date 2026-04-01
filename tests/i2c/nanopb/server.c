@@ -1,5 +1,4 @@
-//#include "platform/linux/capi_i2c_linux_driver.h"
-#include "platform/linux/capi_i2c_linux_driver.h"
+#include "capi_i2c_platform.h"
 #include "capi_rpc.h"
 #include "capi_dma.h"
 #include "transport/transport.h"
@@ -15,7 +14,7 @@
 #include <stdlib.h>
 
 
-struct capi_i2c_ops *used_i2c_ops = &linux_i2c_ops;//&dummy_i2c_ops;
+struct capi_i2c_ops *used_i2c_ops = &i2c_ops;
 
 
 bool Init(const capi_I2CInitParams *request,

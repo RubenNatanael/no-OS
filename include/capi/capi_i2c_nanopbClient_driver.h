@@ -7,7 +7,7 @@
 #include "capi_rpc.h"
 
 /* nanopb-based I2C ops structure */
-extern struct capi_i2c_ops nanopb_i2c_ops;
+extern struct capi_i2c_ops i2c_ops;
 
 /* Global stub - accessible for cleanup */
 extern I2CService_Stub *nanopb_stub;

@@ -15,7 +15,7 @@ static int dummy_i2c_receive(struct capi_i2c_device *device,
 static int dummyc_i2c_register_callback(struct capi_i2c_controller_handle *handle,
                              capi_i2c_callback const callback, void *const callback_arg);
 
-struct capi_i2c_ops dummy_i2c_ops = {
+struct capi_i2c_ops i2c_ops = {
     .init = dummy_i2c_init,
     .deinit = dummy_i2c_deinit,
     .transmit = dummy_i2c_transmit,
@@ -47,7 +47,7 @@ static int dummy_i2c_init(struct capi_i2c_controller_handle **handle,
         }
         (*handle)->init_allocated = true;
     }
-    (*handle)->ops = &dummy_i2c_ops;
+    (*handle)->ops = &i2c_ops;
     (*handle)->lock = NULL;
     (*handle)->priv = NULL;
 

@@ -19,7 +19,7 @@ static int linux_i2c_write(struct capi_i2c_device *device,
 		   struct capi_i2c_transfer *transfer);
 static int linux_i2c_remove(struct capi_i2c_controller_handle *handle);
 
-struct capi_i2c_ops linux_i2c_ops = {
+struct capi_i2c_ops i2c_ops = {
     .init = linux_i2c_init,
     .deinit = linux_i2c_remove,
 	.transmit = linux_i2c_write,

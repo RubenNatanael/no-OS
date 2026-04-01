@@ -8,7 +8,7 @@ extern "C" {
 #include "capi_i2c.h"
 
 // Dummy/simple I2C platform ops (for demonstration)
-extern struct capi_i2c_ops linux_i2c_ops;
+extern struct capi_i2c_ops i2c_ops;
 
 /**
  * @struct linux_i2c_desc

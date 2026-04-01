@@ -1,4 +1,4 @@
-#include "platform/nanopb/capi_i2c_nanopbClient_driver.h"
+#include "capi_i2c_nanopbClient_driver.h"
 #include <stdio.h>
 #include <stddef.h>
 #include <errno.h>
@@ -46,7 +46,7 @@ int main(void)
         .device = NULL,
         .dma_handle = NULL,
         .extra = NULL,
-        .ops = &nanopb_i2c_ops
+        .ops = &i2c_ops
     };
 
     struct capi_i2c_controller_handle *handle = NULL;
